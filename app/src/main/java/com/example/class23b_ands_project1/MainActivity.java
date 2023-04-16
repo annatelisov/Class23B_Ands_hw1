@@ -37,11 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         battery = getBatteryPercentage(this);
 
-        try {
-            curBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
-        } catch (Settings.SettingNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        curBrightnessValue = brightnessValue(curBrightnessValue);
 
         isFlash();
 
@@ -49,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         main_BTN_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                curBrightnessValue = brightnessValue(curBrightnessValue);
+                isFlash();
                 if (!(main_TXT_box.getText().toString().isEmpty())) {
                     if ((battery > 30) && (curBrightnessValue > 1000) && (getDeviceType().equals("Xiaomi")) && (isFlash)) {
                         startActivity(new Intent(MainActivity.this, StartActivity.class));
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Battery Check
     public static int getBatteryPercentage(Context context) {
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -85,12 +84,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Brightness check
+    public int brightnessValue(int curBrightnessValue){
+        try {
+            curBrightnessValue = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
+        } catch (Settings.SettingNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return curBrightnessValue;
+    }
+
+    //Device type check
     public String getDeviceType() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         return manufacturer;
     }
 
+    //If the flash is on\off check
     private void isFlash() {
         CameraManager CM = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {

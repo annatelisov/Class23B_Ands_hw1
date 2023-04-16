@@ -36,11 +36,9 @@ public class MainActivity extends AppCompatActivity {
         main_TXT_box = findViewById(R.id.main_TXT_box);
 
         battery = getBatteryPercentage(this);
-
         curBrightnessValue = brightnessValue(curBrightnessValue);
 
         isFlash();
-
 
         main_BTN_continue.setOnClickListener(new View.OnClickListener() {
             @Override
